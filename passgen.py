@@ -1,4 +1,4 @@
-import random, sys, os, pyperclip
+import random, sys, os, pyperclip, time
 
 passwdSize = None
 passwdArray = []
@@ -14,7 +14,7 @@ for row in range(int(rows)-2):
 
     # Limit charset to the ascii codes between 33 and 126:
     # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
-    passwdString = ''.join( [chr(random.randint(33,126)) for i in xrange(0,passwdSize)] )
+    passwdString = ''.join( [chr(random.randint(33,126)) for i in xrange(0,int(passwdSize))] )
 
     # Add the passsword to the array
     passwdArray.append(passwdString)
@@ -33,8 +33,8 @@ passwdToSave = input('Enter the number of the password you want sent to the clip
 # Copy the password to the clipboard
 pyperclip.copy(passwdArray[passwdToSave])
 
-clear = input('Press any key to clear the clipboard: ')
+# Erase the clipboard after 30 seconds
+time.sleep(30)
 
-# Copy random data to the clipboard
-pyperclip.copy(''.join( [chr(random.randint(33,126)) for i in xrange(0,len(passwdArray[-1]))] ))
-#exit()
+# Copy unprintable data to the clipboard
+pyperclip.copy(''.join( [chr(random.randint(1,31)) for i in xrange(0,len(passwdArray[-1]))] ))
