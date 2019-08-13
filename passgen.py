@@ -16,6 +16,12 @@ for row in range(int(rows)-2):
     # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
     passwdString = ''.join( [chr(random.randint(33,126)) for i in xrange(0,int(passwdSize))] )
 
+    numbers = chr(random.randint(48,57))
+    lowers = chr(random.randint(97,122))
+    uppers = chr(random.randint(65,90))
+    symbols1 = chr(random.randint(33,47))
+
+
     # Add the passsword to the array
     passwdArray.append(passwdString)
     row += 1
