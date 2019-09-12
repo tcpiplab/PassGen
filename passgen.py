@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # Get the terminal dimensions
     rows, columns = os.popen('stty size', 'r').read().split()
 
-    for row in range(int(rows)-2):
+    for row in range(int(rows) - 2):
         if len(sys.argv) > 1:
             password_size = sys.argv[1]
         else:
@@ -22,10 +22,10 @@ if __name__ == '__main__':
         # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
         password_string = ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size))])
 
-        numbers = chr(random.randint(48,57))
-        lowers = chr(random.randint(97,122))
-        uppers = chr(random.randint(65,90))
-        symbols1 = chr(random.randint(33,47))
+        numbers = chr(random.randint(48, 57))
+        lowers = chr(random.randint(97, 122))
+        uppers = chr(random.randint(65, 90))
+        symbols1 = chr(random.randint(33, 47))
 
         # Add the password to the array
         password_array.append(password_string)
@@ -39,13 +39,13 @@ if __name__ == '__main__':
         print("%02d   " % (i,) + password_array[i])
 
     # Ask the user which password to save
-    passwdToSave = int(input('Enter the number of the password you want sent to the clipboard: '))
+    password_to_save = int(input('Enter the number of the password you want sent to the clipboard: '))
 
     # Copy the password to the clipboard
-    pyperclip.copy(password_array[passwdToSave])
+    pyperclip.copy(password_array[password_to_save])
 
     # Erase the clipboard after 30 seconds
-    time.sleep(30)
+    time.sleep(20)
 
     # Copy unprintable data to the clipboard
-    pyperclip.copy(''.join([chr(random.randint(1,31)) for i in range(0, len(password_array[-1]))]))
+    pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(password_array[-1]))]))
