@@ -39,7 +39,7 @@ if __name__ == '__main__':
     for index_number in range(len(password_array)):
         #print("%02d   " % (i,) + password_array[i])
 
-        # Print the indes number of this password in the left column
+        # Print the index number of this password in the left column
         #print("%02d   " % (index_number,), end = '')
         print(colored("%02d   ", 'green') % (index_number,), end = '')
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
                 print(colored(character, 'white'), end='')
 
-            # print numbers in red
+            # print numbers in cyan
             elif ord(character) in range(48,58):
 
                 print(colored(character, 'cyan'), end='')
