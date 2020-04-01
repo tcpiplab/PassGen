@@ -48,23 +48,28 @@ if __name__ == '__main__':
         for character in password:
 
             # print symbols in yellow
-            if ord(character) in range(33,47):
+            if ord(character) in range(33,48):
 
                 print(colored(character, 'yellow'), end='')
 
             # print uppercase strings in white
-            elif ord(character) in range(65,90):
+            elif ord(character) in range(65,91):
 
                 print(colored(character, 'white'), end='')
 
             # print lowercase strings in white
-            elif ord(character) in range(97,122):
+            elif ord(character) in range(97,123):
 
                 print(colored(character, 'white'), end='')
 
-            else:
+            # print numbers in red
+            elif ord(character) in range(48,58):
 
-                print(colored(character, 'cyan'), end = '')
+                print(colored(character, 'cyan'), end='')
+
+            else:
+                # print the rest of the symbols in yellow (ASCII 123 - 126)
+                print(colored(character, 'yellow'), end = '')
 
         print('')
 
