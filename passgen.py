@@ -74,8 +74,11 @@ if __name__ == '__main__':
     # Copy the password to the clipboard
     pyperclip.copy(password_array[password_to_save])
 
-    # Erase the clipboard after 40 seconds
-    time.sleep(40)
+    # Show a countdown timer leading up to erasing the clipboard after 40 seconds
+    for i in range(40,0,-1):
+        sys.stdout.write(str(i)+' ')
+        sys.stdout.flush()
+        time.sleep(1)
 
     # Copy unprintable data to the clipboard
     pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(password_array[-1]))]))
