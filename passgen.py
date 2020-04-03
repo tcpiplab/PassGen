@@ -5,6 +5,21 @@ from termcolor import colored
 import random
 import sys
 import time
+import argparse
+
+parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard
+# Read this to customize this boilerplate:
+# https://docs.python.org/3.3/library/argparse.html
+parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                   help='an integer for the accumulator')
+parser.add_argument('--sum', dest='accumulate', action='store_const',
+                   const=sum, default=max,
+                   help='sum the integers (default: find the max)')
+
+args = parser.parse_args()
+print(args.accumulate(args.integers))
+
+# End argparse boilerplate
 
 if __name__ == '__main__':
     password_size = None
