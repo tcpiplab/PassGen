@@ -7,7 +7,7 @@ import sys
 import time
 import argparse
 
-parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard
+parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard'
 # Read this to customize this boilerplate:
 # https://docs.python.org/3.3/library/argparse.html
 parser.add_argument('integers', metavar='N', type=int, nargs='+',
