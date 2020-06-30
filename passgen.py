@@ -7,11 +7,14 @@ import sys
 import time
 import argparse
 
-parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard'
+# password_length = 16
+
+parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 # Read this to customize this boilerplate:
 # https://docs.python.org/3.3/library/argparse.html
-parser.add_argument('integers', metavar='N', type=int, nargs='+',
-                   help='an integer for the accumulator')
+parser.add_argument('integers', metavar='n (The length of the passwords to be generated)', type=int, nargs='+',
+                    help='The length of the passwords to be generated.')
+# nargs='+',
 parser.add_argument('--sum', dest='accumulate', action='store_const',
                    const=sum, default=max,
                    help='sum the integers (default: find the max)')
