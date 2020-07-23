@@ -7,7 +7,7 @@ import sys
 import time
 import argparse
 
-# password_length = 16
+# password_length = 10
 
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 # Read this to customize this boilerplate:
@@ -34,8 +34,8 @@ if __name__ == '__main__':
     for row in range(int(rows) - 2):
         if len(sys.argv) > 1:
             password_size = sys.argv[1]
-        else:
-            password_size = random.randint(9, 32)
+        elif sys.argv[1] is '':
+            password_size = random.randint(10, 32)
 
         # Limit charset to the ascii codes between 33 and 126:
         # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
@@ -75,10 +75,10 @@ if __name__ == '__main__':
 
                 print(colored(character, 'white'), end='')
 
-            # print lowercase strings in white
+            # print lowercase strings in red
             elif ord(character) in range(97,123):
 
-                print(colored(character, 'white'), end='')
+                print(colored(character, 'red'), end='')
 
             # print numbers in cyan
             elif ord(character) in range(48,58):
