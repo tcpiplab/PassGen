@@ -34,7 +34,7 @@ if __name__ == '__main__':
     for row in range(int(rows) - 2):
         if len(sys.argv) > 1:
             password_size = sys.argv[1]
-        elif sys.argv[1] is '':
+        elif sys.argv[1] == '':
             password_size = random.randint(10, 32)
 
         # Limit charset to the ascii codes between 33 and 126:
