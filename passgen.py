@@ -5,6 +5,24 @@ from termcolor import colored
 import random
 import sys
 import time
+import argparse
+
+# password_length = 10
+
+parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
+# Read this to customize this boilerplate:
+# https://docs.python.org/3.3/library/argparse.html
+parser.add_argument('integers', metavar='n (The length of the passwords to be generated)', type=int, nargs='+',
+                    help='The length of the passwords to be generated.')
+# nargs='+',
+parser.add_argument('--sum', dest='accumulate', action='store_const',
+                   const=sum, default=max,
+                   help='sum the integers (default: find the max)')
+
+args = parser.parse_args()
+print(args.accumulate(args.integers))
+
+# End argparse boilerplate
 
 if __name__ == '__main__':
     password_size = None
@@ -16,8 +34,8 @@ if __name__ == '__main__':
     for row in range(int(rows) - 2):
         if len(sys.argv) > 1:
             password_size = sys.argv[1]
-        else:
-            password_size = random.randint(9, 32)
+        elif sys.argv[1] == '':
+            password_size = random.randint(10, 32)
 
         # Limit charset to the ascii codes between 33 and 126:
         # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
@@ -57,10 +75,10 @@ if __name__ == '__main__':
 
                 print(colored(character, 'white'), end='')
 
-            # print lowercase strings in white
+            # print lowercase strings in red
             elif ord(character) in range(97,123):
 
-                print(colored(character, 'white'), end='')
+                print(colored(character, 'red'), end='')
 
             # print numbers in cyan
             elif ord(character) in range(48,58):
@@ -79,8 +97,8 @@ if __name__ == '__main__':
     # Copy the password to the clipboard
     pyperclip.copy(password_array[password_to_save])
 
-    # Show a countdown timer leading up to erasing the clipboard after 40 seconds
-    for i in range(40,0,-1):
+    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
+    for i in range(60,0,-1):
         sys.stdout.write(str(i)+' ')
         sys.stdout.flush()
         time.sleep(1)
