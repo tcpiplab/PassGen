@@ -1,7 +1,7 @@
 # PassGen
 A small random password generator written in Python. If you're on a Mac it copies the password to the clipboard, then deletes it after 60 seconds.
 
-This is very helpful if you find that you have to create and paste a lot of new passwords for web apps and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it someplace insecure, like into a Slack channel or something.
+This is very helpful if you find that you have to create and paste lots of new passwords for web apps and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it someplace insecure, like into a Slack channel or something.
 
 ## Requirements
 
