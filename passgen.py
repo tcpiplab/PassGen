@@ -94,8 +94,20 @@ if __name__ == '__main__':
     # Ask the user which password to save
     password_to_save = int(input('Enter the number of the password you want sent to the clipboard: '))
 
-    # Copy the password to the clipboard
-    pyperclip.copy(password_array[password_to_save])
+    try:
+        # Copy the password to the clipboard
+        pyperclip.copy(password_array[password_to_save])
+
+    except pyperclip.PyperclipException:
+
+        print("\nError")
+        print("If you're on Linux and seeing this error it probably means that you don't have a clipboard program installed. ")
+        print("You can fix this by installing one of the copy/paste mechanisms:\n")
+        print("    sudo apt-get install xsel to install the xsel utility.")
+        print("    sudo apt-get install xclip to install the xclip utility.")
+        print("    pip install gtk to install the gtk Python module.")
+        print("    pip install PyQt4 to install the PyQt4 Python module.")
+        exit()
 
     # Show a countdown timer leading up to erasing the clipboard after 60 seconds
     for i in range(60,0,-1):
