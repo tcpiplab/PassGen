@@ -103,10 +103,10 @@ if __name__ == '__main__':
         print("\nError")
         print("If you're on Linux and seeing this error it probably means that you don't have a clipboard program installed. ")
         print("You can fix this by installing one of the copy/paste mechanisms:\n")
-        print("    sudo apt-get install xsel to install the xsel utility.")
-        print("    sudo apt-get install xclip to install the xclip utility.")
-        print("    pip install gtk to install the gtk Python module.")
-        print("    pip install PyQt4 to install the PyQt4 Python module.")
+        print("    'sudo apt-get install xsel' to install the xsel utility.")
+        print("    'sudo apt-get install xclip' to install the xclip utility.")
+        print("    'pip3 install gtk' to install the gtk Python module.")
+        print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
         exit()
 
     # Show a countdown timer leading up to erasing the clipboard after 60 seconds
