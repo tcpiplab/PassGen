@@ -106,6 +106,7 @@ if __name__ == '__main__':
         print("    sudo apt-get install xclip to install the xclip utility.")
         print("    pip install gtk to install the gtk Python module.")
         print("    pip install PyQt4 to install the PyQt4 Python module.")
+        exit()
 
     # Show a countdown timer leading up to erasing the clipboard after 60 seconds
     for i in range(60,0,-1):
