@@ -100,6 +100,7 @@ if __name__ == '__main__':
 
     except pyperclip.PyperclipException:
 
+        print("\nError")
         print("If you're on Linux and seeing this error it probably means that you don't have a clipboard program installed. ")
         print("You can fix this by installing one of the copy/paste mechanisms:\n")
         print("    sudo apt-get install xsel to install the xsel utility.")
