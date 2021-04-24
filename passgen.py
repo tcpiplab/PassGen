@@ -7,8 +7,6 @@ import sys
 import time
 import argparse
 
-# password_length = 10
-
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 # Read this to customize this boilerplate:
 # https://docs.python.org/3.3/library/argparse.html
@@ -24,9 +22,31 @@ print(args.accumulate(args.integers))
 
 # End argparse boilerplate
 
+
+def create_english_wordlist() -> object:
+
+    # Using the wordlist from MacOS
+    wordlist = [line.strip() for line in open('/usr/share/dict/words')]
+
+    wordlist_length = wordlist.__len__()
+
+    return wordlist, wordlist_length
+
+def get_random_word(wordlist, wordlist_length):
+
+    word = wordlist[random.randint(0, wordlist_length)]
+
+    return (word, len(word))
+
+
 if __name__ == '__main__':
     password_size = None
     password_array = []
+
+    wordlist, wordlist_length = create_english_wordlist()
+
+    print(get_random_word(wordlist, wordlist_length))
+
 
     # Get the terminal dimensions
     rows, columns = os.popen('stty size', 'r').read().split()
@@ -117,3 +137,6 @@ if __name__ == '__main__':
 
     # Copy unprintable data to the clipboard
     pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(password_array[-1]))]))
+
+
+
