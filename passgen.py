@@ -52,6 +52,7 @@ if __name__ == '__main__':
 
         if args.random_words:
 
+            # TODO: Split this out into at least one function
             # TODO: Don't let the user invoke -w unless the password is 20 chars
 
             # Grab a random English word and its length
@@ -142,7 +143,8 @@ if __name__ == '__main__':
     # Sort the passwords by their length, descending
     # password_array.sort(key=len, reverse=True)
 
-      # Print each password with its index number
+    # TODO: Split the printing of the passwords out to a separate function
+    # Print each password with its index number
     for index_number in range(len(password_array)):
         #print("%02d   " % (i,) + password_array[i])
 
@@ -180,6 +182,7 @@ if __name__ == '__main__':
 
         print('')
 
+    # TODO: Get a PR from Tunl-Lite for his fix for when the wrong char is entered
     # Ask the user which password to save
     password_to_save = int(input('Enter the number of the password you want sent to the clipboard: '))
 
