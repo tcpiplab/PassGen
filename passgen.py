@@ -7,20 +7,12 @@ import sys
 import time
 import argparse
 
+# Argument parsing
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
-# Read this to customize this boilerplate:
-# https://docs.python.org/3.3/library/argparse.html
-parser.add_argument('integers', metavar='n (The length of the passwords to be generated)', type=int, nargs='+',
-                    help='The length of the passwords to be generated.')
-# nargs='+',
-parser.add_argument('--sum', dest='accumulate', action='store_const',
-                   const=sum, default=max,
-                   help='sum the integers (default: find the max)')
+
+parser.add_argument('-L', '--password-length', default=20, help='The length of the passwords to be generated.')
 
 args = parser.parse_args()
-print(args.accumulate(args.integers))
-
-# End argparse boilerplate
 
 
 def create_english_wordlist() -> object:
@@ -40,22 +32,26 @@ def get_random_word(wordlist, wordlist_length):
 
 
 if __name__ == '__main__':
-    password_size = None
+    password_size = args.password_length
+    #print(args.password_length)
     password_array = []
 
+    # Create a list of English words
     wordlist, wordlist_length = create_english_wordlist()
 
-    print(get_random_word(wordlist, wordlist_length))
-
+    # Grab a random English word and its length
+    random_word, random_word_length = get_random_word(wordlist, wordlist_length)
 
     # Get the terminal dimensions
     rows, columns = os.popen('stty size', 'r').read().split()
 
     for row in range(int(rows) - 2):
-        if len(sys.argv) > 1:
-            password_size = sys.argv[1]
-        elif sys.argv[1] == '':
-            password_size = random.randint(10, 32)
+    #     #print("len(sys.argv)..." + str(len(sys.argv)))
+    #     if len(sys.argv) > 1:
+    #         password_size = int(sys.argv[1])
+    #         #print(password_size)
+    #     elif sys.argv[1] == '':
+    #         password_size = random.randint(10, 32)
 
         # Limit charset to the ascii codes between 33 and 126:
         # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
