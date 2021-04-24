@@ -30,6 +30,8 @@ def get_random_word(wordlist, wordlist_length):
 
     word = wordlist[random.randint(0, wordlist_length)]
 
+    # TODO: For random words longer than 8 chars, replace one letter in the middle with another char
+
     return word, len(word)
 
 
@@ -50,8 +52,7 @@ if __name__ == '__main__':
 
         if args.random_words:
 
-            # Blank out the random word first
-            #random_word = ''
+            # TODO: Don't let the user invoke -w unless the password is 20 chars
 
             # Grab a random English word and its length
             random_word, random_word_length = get_random_word(wordlist, wordlist_length)
@@ -97,6 +98,7 @@ if __name__ == '__main__':
                 # Append random chars to the right
                 password_string += ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size - len(random_word_of_proper_length)))])
 
+
             #elif random.choice([0, 1]) == 1:
             else:
                 #print("Left")
@@ -105,6 +107,8 @@ if __name__ == '__main__':
                                             range(0, int(password_size - len(random_word_of_proper_length)))])
 
                 password_string = (random_string + password_string)
+
+            # TODO: Surround the random word with random chars on each side
 
             #else:
                 # For now this is a bug. But for now I'll split the difference by dividing the
