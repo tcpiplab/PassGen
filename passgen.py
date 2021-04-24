@@ -34,7 +34,7 @@ def get_random_word(wordlist, wordlist_length):
 
 
 if __name__ == '__main__':
-    password_size = args.password_length
+    password_size = int(args.password_length)
     #print(args.password_length)
     password_array = []
 
@@ -44,32 +44,33 @@ if __name__ == '__main__':
     # Get the terminal dimensions
     rows, columns = os.popen('stty size', 'r').read().split()
 
+    # For each row, we create a password
     for row in range(int(rows) - 2):
-        # Limit charset to the ascii codes between 33 and 126:
-        # numbers = chr(random.randint(48, 57))
-        # lowers = chr(random.randint(97, 122))
-        # uppers = chr(random.randint(65, 90))
-        # symbols1 = chr(random.randint(33, 47))
-        # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
-        password_string = ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size))])
+
 
         if args.random_words:
+
+            # Blank out the random word first
+            #random_word = ''
 
             # Grab a random English word and its length
             random_word, random_word_length = get_random_word(wordlist, wordlist_length)
 
-            if random_word_length <= len(password_string):
+            #print(random_word_length, password_size)
 
-                #print(random_word)
-                #exit()
+            if random_word_length <= int(password_size):
+
+                # We didn't need to modify the length so we just go ahead and rename it
+                random_word_of_proper_length = random_word
+                #print(random_word_of_proper_length)
 
             else:
 
-                if random_word_length > len(password_string):
+                if random_word_length > int(password_size):
 
                     # The random word is too long for the password it will inhabit
                     # Chop the random word down to about 70% as long as the password
-                    truncated_random_word_length = round(len(password_string) * 0.7)
+                    truncated_random_word_length = round(int(password_size) * 0.7)
 
                     # Randomly decide to chop off the beginning or the end of the word
                     # It will be mod 2 only 1/3 of the time. This way we will more often
@@ -77,24 +78,67 @@ if __name__ == '__main__':
                     if not random.randint(0,2) % 2:
 
                         # For a 10 character word, we want the first 7 characters only
-                        truncated_random_word = random_word[:truncated_random_word_length]
+                        random_word_of_proper_length = random_word[:truncated_random_word_length]
 
                     else:
 
                         # For a 10 character word, we want the last 7 characters only
-                        truncated_random_word = random_word[truncated_random_word_length:]
+                        random_word_of_proper_length = random_word[truncated_random_word_length:]
 
-                    #print(colored(truncated_random_word, 'magenta'), end='')
+                    #print(colored(random_word_of_proper_length, 'magenta'))
                     #exit()
 
-        # Add the password to the array
+            # Now that we have a random word of the right length,
+            # build a password around it
+            password_string = random_word_of_proper_length
+
+            if random.choice([0, 1]) == 0:
+                #print("Right")
+                # Append random chars to the right
+                password_string += ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size - len(random_word_of_proper_length)))])
+
+            #elif random.choice([0, 1]) == 1:
+            else:
+                #print("Left")
+                # Prepend random chars to the left
+                random_string = ''.join([chr(random.randint(33, 126)) for i in
+                                            range(0, int(password_size - len(random_word_of_proper_length)))])
+
+                password_string = (random_string + password_string)
+
+            #else:
+                # For now this is a bug. But for now I'll split the difference by dividing the
+                # length of the random chars by 2 and doing both the left and the right.
+                # I asked for help at:
+                # https://stackoverflow.com/questions/67239230/why-does-random-choice-sometimes-not-make-any-choice
+
+             #   password_string += ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size - int((int(len(random_word_of_proper_length))))/2))])
+
+                #random_string = ''.join([chr(random.randint(33, 126)) for i in
+                 #                range(0, (int(password_size - int(len(random_word_of_proper_length))/2)))])
+
+                #password_string = (random_string + password_string)
+
+        else:
+
+            # If not wanting a random word in the passwords, then just
+            # generate a random string for each password
+            # Limit charset to the ascii codes between 33 and 126:
+            # numbers = chr(random.randint(48, 57))
+            # lowers = chr(random.randint(97, 122))
+            # uppers = chr(random.randint(65, 90))
+            # symbols1 = chr(random.randint(33, 47))
+            # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
+            password_string = ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size))])
+
+        # Add the newly created password to the array
         password_array.append(password_string)
         row += 1
 
     # Sort the passwords by their length, descending
-    password_array.sort(key=len, reverse=True)
+    # password_array.sort(key=len, reverse=True)
 
-    # Print each password with its index number
+      # Print each password with its index number
     for index_number in range(len(password_array)):
         #print("%02d   " % (i,) + password_array[i])
 
