@@ -19,6 +19,10 @@ args = parser.parse_args()
 
 def create_english_wordlist() -> object:
 
+    # TODO: Detect OS, choose this file or the Linux dictionary. Error out if Windows?
+    # TODO: Also use Mac's /usr/share/dict/web2a for things like 'zoot suit', etc.
+    # TODO: Also use Mac's /usr/share/dict/propernames.
+    # TODO: Also use Mac's /usr/share/zoneinfo.default/iso3166.tab for country names.
     # Using the wordlist from MacOS
     wordlist = [line.strip() for line in open('/usr/share/dict/words')]
 
