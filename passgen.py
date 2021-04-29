@@ -58,6 +58,12 @@ if __name__ == '__main__':
 
             # TODO: Split this out into at least one function
             # TODO: Don't let the user invoke -w unless the password is 20 chars
+            if password_size < 20:
+
+                print("That won\'t work very well.")
+                print("You should have a password of 20 characters or more when using")
+                print("the random word feature.")
+                exit()
 
             # Grab a random English word and its length
             random_word, random_word_length = get_random_word(wordlist, wordlist_length)
