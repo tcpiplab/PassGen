@@ -52,32 +52,31 @@ def get_memorable_password(size_of_password):
     # Grab a random English word and its length
     random_word, random_word_length = get_random_word(wordlist, wordlist_length)
 
-    if random_word_length <= int(size_of_password):
+    # if random_word_length <= int(size_of_password):
+    #
+    #     # We didn't need to modify the length so we just go ahead and rename it
+    #     random_word_of_proper_length = random_word
+    #
+    # else:
 
-        # We didn't need to modify the length so we just go ahead and rename it
-        random_word_of_proper_length = random_word
+    # The random word needs to be truncated
+
+    # The random word is too long for the password it will inhabit
+    # Chop the random word down to about 50% as long as the password
+    truncated_random_word_length = round(int(size_of_password) * 0.5)
+
+    # Randomly decide to chop off the beginning or the end of the word
+    # It will be mod 2 only 1/3 of the time. This way we will more often
+    # use the beginning of the word, that being easier to read.
+    if not random.randint(0, 2) % 2:
+
+        # For a 10 character word, we want the first 7 characters only
+        random_word_of_proper_length = random_word[:truncated_random_word_length]
 
     else:
 
-        # The random word needs to be truncated
-
-        # The random word is too long for the password it will inhabit
-        # Chop the random word down to about 70% as long as the password
-        truncated_random_word_length = round(int(size_of_password) * 0.7)
-
-        # Randomly decide to chop off the beginning or the end of the word
-        # It will be mod 2 only 1/3 of the time. This way we will more often
-        # use the beginning of the word, that being easier to read.
-        if not random.randint(0, 2) % 2:
-
-            # For a 10 character word, we want the first 7 characters only
-            random_word_of_proper_length = random_word[:truncated_random_word_length]
-
-        else:
-
-            # For a 10 character word, we want the last 7 characters only
-            random_word_of_proper_length = random_word[truncated_random_word_length:]
-
+        # For a 10 character word, we want the last 7 characters only
+        random_word_of_proper_length = random_word[truncated_random_word_length:]
 
 
     # Now we need to add entropy
