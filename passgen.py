@@ -32,8 +32,6 @@ def create_english_wordlist() -> object:
 
     wordlist_length = wordlist.__len__()
 
-    print(wordlist_length)
-
     return wordlist, wordlist_length
 
 def get_random_word(wordlist, wordlist_length):
