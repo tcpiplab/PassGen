@@ -20,13 +20,19 @@ args = parser.parse_args()
 def create_english_wordlist() -> object:
 
     # TODO: Detect OS, choose this file or the Linux dictionary. Error out if Windows?
-    # TODO: Also use Mac's /usr/share/dict/web2a for things like 'zoot suit', etc.
-    # TODO: Also use Mac's /usr/share/dict/propernames.
     # TODO: Also use Mac's /usr/share/zoneinfo.default/iso3166.tab for country names.
-    # Using the wordlist from MacOS
+    # Using the wordlists from MacOS
     wordlist = [line.strip() for line in open('/usr/share/dict/words')]
 
+    wordlist += [line.strip() for line in open('/usr/share/dict/propernames')]
+
+    wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/dict/web2a')]
+
+    wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/zoneinfo.default/iso3166.tab')]
+
     wordlist_length = wordlist.__len__()
+
+    print(wordlist_length)
 
     return wordlist, wordlist_length
 
@@ -43,17 +49,17 @@ def get_memorable_password(size_of_password):
 
     random_word_of_proper_length = ''
 
-    if size_of_password < 15:
-        print("That won\'t work very well.")
-        print("You should have a password of 15 characters or more when using")
+    if size_of_password < 20:
+        print("That won\'t work.")
+        print("You should have a password of 20 characters or more when using")
         print("the random word feature.")
         exit()
 
     # Grab a random English word and its length
     random_word, random_word_length = get_random_word(wordlist, wordlist_length)
 
-    # Chop the random word down to about 50% as long as the password
-    truncated_random_word_length = round(int(size_of_password) * 0.5)
+    # Chop the random word down to about 60% as long as the password
+    truncated_random_word_length = round(int(size_of_password) * 0.6)
 
     random_word_of_proper_length = random_word[:truncated_random_word_length]
 
