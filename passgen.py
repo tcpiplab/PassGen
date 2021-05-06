@@ -39,7 +39,72 @@ def get_random_word(wordlist, wordlist_length):
     return word, len(word)
 
 
+def get_memorable_password(size_of_password):
+
+    random_word_of_proper_length = ''
+
+    if size_of_password < 20:
+        print("That won\'t work very well.")
+        print("You should have a password of 20 characters or more when using")
+        print("the random word feature.")
+        exit()
+
+    # Grab a random English word and its length
+    random_word, random_word_length = get_random_word(wordlist, wordlist_length)
+
+    if random_word_length <= int(size_of_password):
+
+        # We didn't need to modify the length so we just go ahead and rename it
+        random_word_of_proper_length = random_word
+
+    else:
+
+        # The random word needs to be truncated
+
+        # The random word is too long for the password it will inhabit
+        # Chop the random word down to about 70% as long as the password
+        truncated_random_word_length = round(int(size_of_password) * 0.7)
+
+        # Randomly decide to chop off the beginning or the end of the word
+        # It will be mod 2 only 1/3 of the time. This way we will more often
+        # use the beginning of the word, that being easier to read.
+        if not random.randint(0, 2) % 2:
+
+            # For a 10 character word, we want the first 7 characters only
+            random_word_of_proper_length = random_word[:truncated_random_word_length]
+
+        else:
+
+            # For a 10 character word, we want the last 7 characters only
+            random_word_of_proper_length = random_word[truncated_random_word_length:]
+
+
+
+    # Now we need to add entropy
+
+    if random.choice([0, 1]) == 0:
+
+        # Append random chars to the right
+        random_word_of_proper_length += ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size - len(random_word_of_proper_length)))])
+
+        return random_word_of_proper_length
+
+    else:
+
+        # Prepend random chars to the left
+        random_string = ''.join([chr(random.randint(33, 126)) for i in
+                                    range(0, int(password_size - len(random_word_of_proper_length)))])
+
+        random_word_of_proper_length = (random_string + random_word_of_proper_length)
+
+        return random_word_of_proper_length
+
+    # TODO: Surround the random word with random chars on each side
+
+
+
 if __name__ == '__main__':
+
     password_size = int(args.password_length)
     #print(args.password_length)
     password_array = []
@@ -53,86 +118,9 @@ if __name__ == '__main__':
     # For each row, we create a password
     for row in range(int(rows) - 2):
 
-
         if args.random_words:
 
-            # TODO: Split this out into at least one function
-            # TODO: Don't let the user invoke -w unless the password is 20 chars
-            if password_size < 20:
-
-                print("That won\'t work very well.")
-                print("You should have a password of 20 characters or more when using")
-                print("the random word feature.")
-                exit()
-
-            # Grab a random English word and its length
-            random_word, random_word_length = get_random_word(wordlist, wordlist_length)
-
-            #print(random_word_length, password_size)
-
-            if random_word_length <= int(password_size):
-
-                # We didn't need to modify the length so we just go ahead and rename it
-                random_word_of_proper_length = random_word
-                #print(random_word_of_proper_length)
-
-            else:
-
-                if random_word_length > int(password_size):
-
-                    # The random word is too long for the password it will inhabit
-                    # Chop the random word down to about 70% as long as the password
-                    truncated_random_word_length = round(int(password_size) * 0.7)
-
-                    # Randomly decide to chop off the beginning or the end of the word
-                    # It will be mod 2 only 1/3 of the time. This way we will more often
-                    # use the beginning of the word, that being easier to read.
-                    if not random.randint(0,2) % 2:
-
-                        # For a 10 character word, we want the first 7 characters only
-                        random_word_of_proper_length = random_word[:truncated_random_word_length]
-
-                    else:
-
-                        # For a 10 character word, we want the last 7 characters only
-                        random_word_of_proper_length = random_word[truncated_random_word_length:]
-
-                    #print(colored(random_word_of_proper_length, 'magenta'))
-                    #exit()
-
-            # Now that we have a random word of the right length,
-            # build a password around it
-            password_string = random_word_of_proper_length
-
-            if random.choice([0, 1]) == 0:
-                #print("Right")
-                # Append random chars to the right
-                password_string += ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size - len(random_word_of_proper_length)))])
-
-
-            #elif random.choice([0, 1]) == 1:
-            else:
-                #print("Left")
-                # Prepend random chars to the left
-                random_string = ''.join([chr(random.randint(33, 126)) for i in
-                                            range(0, int(password_size - len(random_word_of_proper_length)))])
-
-                password_string = (random_string + password_string)
-
-            # TODO: Surround the random word with random chars on each side
-
-            #else:
-                # For now this is a bug. But for now I'll split the difference by dividing the
-                # length of the random chars by 2 and doing both the left and the right.
-                # I asked for help at:
-                # https://stackoverflow.com/questions/67239230/why-does-random-choice-sometimes-not-make-any-choice
-
-             #   password_string += ''.join([chr(random.randint(33, 126)) for i in range(0, int(password_size - int((int(len(random_word_of_proper_length))))/2))])
-
-                #random_string = ''.join([chr(random.randint(33, 126)) for i in
-                 #                range(0, (int(password_size - int(len(random_word_of_proper_length))/2)))])
-
-                #password_string = (random_string + password_string)
+            password_string = get_memorable_password(password_size)
 
         else:
 
