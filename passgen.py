@@ -20,7 +20,7 @@ args = parser.parse_args()
 def create_english_wordlist() -> object:
 
     # TODO: Detect OS, choose this file or the Linux dictionary. Error out if Windows?
-    # TODO: Also use Mac's /usr/share/zoneinfo.default/iso3166.tab for country names.
+
     # Using the wordlists from MacOS
     wordlist = [line.strip() for line in open('/usr/share/dict/words')]
 
@@ -135,16 +135,10 @@ if __name__ == '__main__':
         password_array.append(password_string)
         row += 1
 
-    # Sort the passwords by their length, descending
-    # password_array.sort(key=len, reverse=True)
-
     # TODO: Split the printing of the passwords out to a separate function
     # Print each password with its index number
     for index_number in range(len(password_array)):
-        #print("%02d   " % (i,) + password_array[i])
 
-        # Print the index number of this password in the left column
-        #print("%02d   " % (index_number,), end = '')
         print(colored("%02d   ", 'green') % (index_number,), end = '')
 
         password = password_array[index_number]
