@@ -1,7 +1,7 @@
 # PassGen
 A small random password generator written in Python. If you're on a Mac it copies the password to the clipboard, then deletes it after 60 seconds.
 
-This is very helpful if you find that you have to create and paste a lot of new passwords for web apps and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it someplace insecure, like into a Slack channel or something.
+This is very helpful if you find that you have to create and paste a lot of new passwords for web apps and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it somewhere insecure, like into a Slack channel or something.
 
 ## Requirements
 
@@ -44,7 +44,7 @@ You have to give a password length when you run it. For example, if you want 10 
 $ passgen 10
 ```
 
-In the example below, the user invoked `passgen.py` asking for 10 character passwords. The terminal then filled up with 14 passwords to choose from. This example was generated inside a small terminal window. If you want a lot of passwords to choose from you need a bigger terminal window. The user selected password number 3 by typing in `03` and hitting Enter. This copied the password `ep0+?8%%vi` to the Mac's clipboard and started a 60 second timer, printing the remaining seconds as it counted down. When the countdown ended the password was deleted from the clipboard. 
+In the example below, the user invoked `passgen.py` asking for 10 character passwords. The terminal then filled up with 14 passwords to choose from. This example was generated inside a small terminal window. If you want a lot of passwords to choose from you need a bigger terminal window. The user selected password number 3 by typing in `03` and hitting Enter. This copied the password `ep0+?8%%vi` to the Mac's clipboard and started a 60 second timer, printing the remaining seconds as it counted down. When the countdown ended the password was deleted from the clipboard.
 
 ```
 $ passgen 10
@@ -65,7 +65,7 @@ $ passgen 10
 13   ":7m5UID#4
 14   Sp_dy$NfWt
 Enter the number of the password you want sent to the clipboard: 03
-60 59 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 
+The clipboard will be cleared in 60 seconds 
 ```
 
 Here is a color screenshot. The colors help you choose a password containing all character classes. For example, although password number 11, like the others, was generated at random, you can see that is contains too many lowercase letters (red), and it does not contain any uppercase letters (white).
