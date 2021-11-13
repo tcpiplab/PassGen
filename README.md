@@ -1,28 +1,31 @@
 # PassGen
 A small random password generator written in Python. If you're on a Mac it copies the password to the clipboard, then deletes it after 60 seconds.
 
+
 This is very helpful if you find that you have to create and paste a lot of new passwords for web apps and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it somewhere insecure, like into a Slack channel or something.
+
 
 ## Requirements
 
 * Python 3
 * [pyperclip 1.7.0](https://pypi.org/project/pyperclip/1.7.0/)
+* [termcolor 1.1.0](https://pypi.org/project/termcolor/)
 
 ## Setup
 
 1. Clone this repository.
 2. Change into the repo directory that you just cloned.
-3. Install the `pyperclip` module, which is the only thing listed inside the `requirements.txt` file. This is how the passwords get copied to your Mac's clipboard.
+3. Install the `pyperclip` module and the `termcolor` module, these are listed inside the `requirements.txt` file. These modules handle how the passwords get copied to your computer's clipboard, and color output, respectively.
 
 ```
 $ git clone git@github.com:tcpiplab/PassGen.git
 $ cd PassGen
-$ pip install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 ### Optional: Setup a Bash alias
 
-Add an alias to your `.bash_profile` file so you can run this from the shell without having to call Python. Here is an example. You may or may not want to be using a `venv` in your path. That is not required. The point here is that the alias calls Python, wherever you have it installed, and the argument to Python is the path to `passgen.py`. The example below shows the alias on my Mac.
+Add an alias to your `.bash_profile` file so that you can run this from the shell without having to call Python. Here is an example. You may or may not want to be using a `venv` in your path. That is not required. The point here is that the alias calls Python, wherever you have it installed, and the argument to Python is the path to `passgen.py`. The example below shows the alias on my Mac.
 
 ```
 $ grep passgen ~/.bash_profile
