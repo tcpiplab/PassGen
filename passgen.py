@@ -8,6 +8,33 @@ import time
 import argparse
 
 # Argument parsing
+
+# Gather a random selection from two ranges for the password string
+def random_ascii_or_hiragana():
+
+    random_num = random.randint(1, 2)
+
+    if random_num == 1:
+        return random.randint(33, 126)
+    else:
+        return random.randint(12353, 12436)
+
+
+# Provide repeatable request for index number if entry is not a number
+def input_number(message):
+    while True:
+        try:
+            input_selection = int(input(message))
+            if input_selection not in range(0, len(password_array)):
+                print(colored("Selection {} not within range", 'red').format(input_selection))
+                continue
+        except ValueError:
+            print(colored("Selection is invalid!", 'red'))
+            continue
+        else:
+            return input_selection
+
+
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 
 parser.add_argument('-L', '--password-length', default=20, help='The length of the passwords to be generated.')
@@ -112,14 +139,35 @@ if __name__ == '__main__':
 
     # For each row, we create a password
     for row in range(int(rows) - 2):
+        if len(sys.argv) > 1:
+            password_size = sys.argv[1]
+        elif sys.argv[1] == '':
+            password_size = random.randint(10, 32)
 
         if args.random_words:
 
+
             password_string = get_memorable_password(password_size)
+
+        elif args.japanese:
+            # Limit charset to the ascii codes between 33 through 126 and 12353 through 12436:
+            # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}
+            # ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのばぱひびぴふぶぷへべぺほぼぽまみむ
+            # めもゃやゅゆょよらりるれろゎわゐゑをんゔ
+            # numbers = chr(random.randint(48, 57))
+            # lowers = chr(random.randint(97, 122))
+            # uppers = chr(random.randint(65, 90))
+            # symbols1 = chr(random.randint(33, 47))
+            # hiragana = chr(random.randint(12353, 12436))
+
+            password_string = ''.join([chr(random_ascii_or_hiragana()) for i in range(0, int(password_size))])
+
+
 
         else:
 
-            # If not wanting a random word in the passwords, then just
+            # If not wanting a random word in the passwords,
+            # and not wanting Japanese chars, then just
             # generate a random string for each password
             # Limit charset to the ascii codes between 33 and 126:
             # numbers = chr(random.randint(48, 57))
@@ -131,47 +179,57 @@ if __name__ == '__main__':
 
         # Add the newly created password to the array
         password_array.append(password_string)
-        row += 1
+        # Unneeded row is defined at the top of this loop
+    #   row += 1
+
+    # Sort the passwords by their length, descending
+    password_array.sort(key=len, reverse=True)
 
     # TODO: Split the printing of the passwords out to a separate function
     # Print each password with its index number
     for index_number in range(len(password_array)):
 
-        print(colored("%02d   ", 'green') % (index_number,), end = '')
+        # Print the index number of this password in the left column
+        print(colored("%02d   ", 'green') % (index_number,), end='')
 
         password = password_array[index_number]
 
         for character in password:
 
             # print symbols in yellow
-            if ord(character) in range(33,48):
+            if ord(character) in range(33, 48):
 
                 print(colored(character, 'yellow'), end='')
 
             # print uppercase strings in white
-            elif ord(character) in range(65,91):
+            elif ord(character) in range(65, 91):
 
                 print(colored(character, 'white'), end='')
 
             # print lowercase strings in red
-            elif ord(character) in range(97,123):
+            elif ord(character) in range(97, 123):
 
                 print(colored(character, 'red'), end='')
 
             # print numbers in cyan
-            elif ord(character) in range(48,58):
+            elif ord(character) in range(48, 58):
 
                 print(colored(character, 'cyan'), end='')
 
+            # print hiragana in magenta
+            elif ord(character) in range(12353, 12437):
+
+                print(colored(character, 'magenta'), end='')
+
             else:
                 # print the rest of the symbols in yellow (ASCII 123 - 126)
-                print(colored(character, 'yellow'), end = '')
+                print(colored(character, 'yellow'), end='')
 
         print('')
 
     # TODO: Get a PR from Tunl-Lite for his fix for when the wrong char is entered
     # Ask the user which password to save
-    password_to_save = int(input('Enter the number of the password you want sent to the clipboard: '))
+    password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
 
     try:
         # Copy the password to the clipboard
@@ -189,13 +247,16 @@ if __name__ == '__main__':
         exit()
 
     # Show a countdown timer leading up to erasing the clipboard after 60 seconds
-    for i in range(60,0,-1):
-        sys.stdout.write(str(i)+' ')
+    for i in range(60, -1, -1):
+        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i))+'\r')
+    # Switch color of prompt to red near less 10 seconds to completion
+        if i < 11:
+            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i))+'\r')
+        if i < 1:
+            sys.stdout.write("\033[K")
+            print("The clipboard has been cleared")
         sys.stdout.flush()
         time.sleep(1)
 
     # Copy unprintable data to the clipboard
     pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(password_array[-1]))]))
-
-
-
