@@ -37,9 +37,11 @@ def input_number(message):
 
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 
-parser.add_argument('-L', '--password-length', default=20, help='The length of the passwords to be generated.')
+parser.add_argument('-l', '--password-length', default=20, help='The length of the passwords to be generated.')
 
 parser.add_argument('-w', '--random-words', action='store_true', help='Embed a random English word within each password.')
+
+parser.add_argument('-j', '--japanese', action='store_true', help='Include random Japanese characters in each password.')
 
 args = parser.parse_args()
 
@@ -72,6 +74,7 @@ def get_random_word(wordlist, wordlist_length):
 
 def get_memorable_password(size_of_password):
 
+    # TODO: add check for japanese flag and add japanese chars if needed.
     random_word_of_proper_length = ''
 
     if size_of_password < 20:
@@ -139,14 +142,11 @@ if __name__ == '__main__':
 
     # For each row, we create a password
     for row in range(int(rows) - 2):
-        if len(sys.argv) > 1:
-            password_size = sys.argv[1]
-        elif sys.argv[1] == '':
+
+        if len(sys.argv) < 1:
             password_size = random.randint(10, 32)
 
         if args.random_words:
-
-
             password_string = get_memorable_password(password_size)
 
         elif args.japanese:
