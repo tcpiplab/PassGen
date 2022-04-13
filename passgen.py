@@ -9,8 +9,25 @@ import argparse
 
 # Argument parsing
 
-# Gather a random selection from two ranges for the password string
+parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
+
+parser.add_argument('-l', '--password-length', default=20,
+                    help='The length of the passwords to be generated.')
+
+parser.add_argument('-w', '--random-words', action='store_true',
+                    help='Embed a random English word within each password.')
+
+parser.add_argument('-j', '--japanese', action='store_true',
+                    help='Include random Japanese characters in each password.')
+
+args = parser.parse_args()
+
+
 def random_ascii_or_hiragana():
+    """
+    Gather a random selection from two ranges for the password string
+    :return:
+    """
 
     random_num = random.randint(1, 2)
 
@@ -20,8 +37,13 @@ def random_ascii_or_hiragana():
         return random.randint(12353, 12436)
 
 
-# Provide repeatable request for index number if entry is not a number
 def input_number(message):
+    """
+    Provide repeating request for index number if the user's entry is not a number
+    :param message:
+    :return:
+    """
+
     while True:
         try:
             input_selection = int(input(message))
@@ -35,22 +57,11 @@ def input_number(message):
             return input_selection
 
 
-parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
-
-parser.add_argument('-l', '--password-length', default=20, help='The length of the passwords to be generated.')
-
-parser.add_argument('-w', '--random-words', action='store_true', help='Embed a random English word within each password.')
-
-parser.add_argument('-j', '--japanese', action='store_true', help='Include random Japanese characters in each password.')
-
-args = parser.parse_args()
-
-
 def create_english_wordlist() -> object:
 
     # TODO: Detect OS, choose this file or the Linux dictionary. Error out if Windows?
 
-    # Using the wordlists from MacOS
+    # Using the word lists from MacOS
     wordlist = [line.strip() for line in open('/usr/share/dict/words')]
 
     wordlist += [line.strip() for line in open('/usr/share/dict/propernames')]
@@ -62,6 +73,7 @@ def create_english_wordlist() -> object:
     wordlist_length = wordlist.__len__()
 
     return wordlist, wordlist_length
+
 
 def get_random_word(wordlist, wordlist_length):
 
@@ -108,19 +120,25 @@ def get_memorable_password(size_of_password):
     return random_word_of_proper_length
 
 
-
-
-
 def add_entropy_right(rand_word):
+    """
+    Append one random char to the right
+    :param rand_word:
+    :return:
+    """
 
-    # Append one random char to the right
     rand_word += ''.join(chr(random.randint(33, 126)))
 
     return rand_word
 
-def add_entropy_left(rand_word):
 
-    # Append one random char to the left
+def add_entropy_left(rand_word):
+    """
+    Append one random char to the left
+    :param rand_word:
+    :return:
+    """
+
     random_char = ''.join(chr(random.randint(33, 126)))
 
     rand_word = (random_char + rand_word)
@@ -131,7 +149,7 @@ def add_entropy_left(rand_word):
 if __name__ == '__main__':
 
     password_size = int(args.password_length)
-    #print(args.password_length)
+
     password_array = []
 
     # Create a list of English words
@@ -161,8 +179,6 @@ if __name__ == '__main__':
             # hiragana = chr(random.randint(12353, 12436))
 
             password_string = ''.join([chr(random_ascii_or_hiragana()) for i in range(0, int(password_size))])
-
-
 
         else:
 
@@ -237,8 +253,9 @@ if __name__ == '__main__':
 
     except pyperclip.PyperclipException:
 
-        print("\nError")
-        print("If you're on Linux and seeing this error it probably means that you don't have a clipboard program installed. ")
+        print(colored("\nError", 'red'))
+        print("If you're on Linux and seeing this error it probably means that ")
+        print("you don't have a clipboard program installed. ")
         print("You can fix this by installing one of the copy/paste mechanisms:\n")
         print("    'sudo apt-get install xsel' to install the xsel utility.")
         print("    'sudo apt-get install xclip' to install the xclip utility.")
