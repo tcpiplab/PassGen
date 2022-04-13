@@ -20,6 +20,13 @@ parser.add_argument('-w', '--random-words', action='store_true',
 parser.add_argument('-j', '--japanese', action='store_true',
                     help='Include random Japanese characters in each password.')
 
+parser.add_argument('-s', '--silent', action='store_true',
+                    help='Silently return a password to the clipboard (default behavior).')
+
+parser.add_argument('-i', '--interactive', action='store_true',
+                    help='Generate a list of random passwords, allowing the user to choose one to copy to \
+                    the clipboard, erase the clipboard afterward.')
+
 args = parser.parse_args()
 
 
@@ -146,6 +153,55 @@ def add_entropy_left(rand_word):
     return rand_word
 
 
+def print_passwords_interactive(password_array):
+    """
+
+    :param password_array:
+    :return:
+    """
+
+    # Print each password with its index number
+    for index_number in range(len(password_array)):
+
+        # Print the index number of this password in the left column
+        print(colored("%02d   ", 'green') % (index_number,), end='')
+
+        password = password_array[index_number]
+
+        for character in password:
+
+            # print symbols in yellow
+            if ord(character) in range(33, 48):
+
+                print(colored(character, 'yellow'), end='')
+
+            # print uppercase strings in white
+            elif ord(character) in range(65, 91):
+
+                print(colored(character, 'white'), end='')
+
+            # print lowercase strings in red
+            elif ord(character) in range(97, 123):
+
+                print(colored(character, 'red'), end='')
+
+            # print numbers in cyan
+            elif ord(character) in range(48, 58):
+
+                print(colored(character, 'cyan'), end='')
+
+            # print hiragana in magenta
+            elif ord(character) in range(12353, 12437):
+
+                print(colored(character, 'magenta'), end='')
+
+            else:
+                # print the rest of the symbols in yellow (ASCII 123 - 126)
+                print(colored(character, 'yellow'), end='')
+
+        print('')
+
+
 if __name__ == '__main__':
 
     password_size = int(args.password_length)
@@ -201,49 +257,12 @@ if __name__ == '__main__':
     # Sort the passwords by their length, descending
     password_array.sort(key=len, reverse=True)
 
+    if args.silent:
+        pass
+
     # TODO: Split the printing of the passwords out to a separate function
-    # Print each password with its index number
-    for index_number in range(len(password_array)):
+    print_passwords_interactive(password_array)
 
-        # Print the index number of this password in the left column
-        print(colored("%02d   ", 'green') % (index_number,), end='')
-
-        password = password_array[index_number]
-
-        for character in password:
-
-            # print symbols in yellow
-            if ord(character) in range(33, 48):
-
-                print(colored(character, 'yellow'), end='')
-
-            # print uppercase strings in white
-            elif ord(character) in range(65, 91):
-
-                print(colored(character, 'white'), end='')
-
-            # print lowercase strings in red
-            elif ord(character) in range(97, 123):
-
-                print(colored(character, 'red'), end='')
-
-            # print numbers in cyan
-            elif ord(character) in range(48, 58):
-
-                print(colored(character, 'cyan'), end='')
-
-            # print hiragana in magenta
-            elif ord(character) in range(12353, 12437):
-
-                print(colored(character, 'magenta'), end='')
-
-            else:
-                # print the rest of the symbols in yellow (ASCII 123 - 126)
-                print(colored(character, 'yellow'), end='')
-
-        print('')
-
-    # TODO: Get a PR from Tunl-Lite for his fix for when the wrong char is entered
     # Ask the user which password to save
     password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
 
