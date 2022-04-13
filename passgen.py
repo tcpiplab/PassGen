@@ -116,7 +116,7 @@ def get_memorable_password(size_of_password):
         random_word_of_proper_length = add_entropy_right(random_word_of_proper_length)
 
         # About half of the time, skip adding the left char. So we have more on the right
-        if random.randint(0,1) == 0:
+        if random.randint(0, 1) == 0:
 
             pass
 
@@ -237,7 +237,26 @@ def interactive_mode(array_of_passwords):
     pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(array_of_passwords[-1]))]))
 
 
+def silent_mode(arrary_of_passwds):
+    """
+
+    :param arrary_of_passw:
+    :return:
+    """
+    passwd_to_print = random.choice(arrary_of_passwds)
+
+    print(passwd_to_print)
+    exit()
+
+
 if __name__ == '__main__':
+
+    # Set cli argument defaults. If no args, set -s. If no -s then set -i.
+    if not len(sys.argv) > 1:
+        args.silent = True
+
+    if not args.silent:
+        args.interactive = True
 
     password_size = int(args.password_length)
 
@@ -294,7 +313,7 @@ if __name__ == '__main__':
     password_array.sort(key=len, reverse=True)
 
     if args.silent:
-        pass
+        silent_mode(password_array)
 
     if args.interactive:
         interactive_mode(password_array)
