@@ -245,6 +245,7 @@ def silent_mode(arrary_of_passwds):
     """
     passwd_to_print = random.choice(arrary_of_passwds)
 
+    # TODO: pass passwd to the clipboard instead of printing
     print(passwd_to_print)
     exit()
 
