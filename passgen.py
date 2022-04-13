@@ -202,6 +202,41 @@ def print_passwords_interactive(password_array):
         print('')
 
 
+def interactive_mode(array_of_passwords):
+    # TODO: Split the printing of the passwords out to a separate function
+    print_passwords_interactive(array_of_passwords)
+    # Ask the user which password to save
+    password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
+    try:
+        # Copy the password to the clipboard
+        pyperclip.copy(array_of_passwords[password_to_save])
+
+    except pyperclip.PyperclipException:
+
+        print(colored("\nError", 'red'))
+        print("If you're on Linux and seeing this error it probably means that ")
+        print("you don't have a clipboard program installed. ")
+        print("You can fix this by installing one of the copy/paste mechanisms:\n")
+        print("    'sudo apt-get install xsel' to install the xsel utility.")
+        print("    'sudo apt-get install xclip' to install the xclip utility.")
+        print("    'pip3 install gtk' to install the gtk Python module.")
+        print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
+        exit()
+    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
+    for i in range(60, -1, -1):
+        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i)) + '\r')
+        # Switch color of prompt to red near less 10 seconds to completion
+        if i < 11:
+            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i)) + '\r')
+        if i < 1:
+            sys.stdout.write("\033[K")
+            print("The clipboard has been cleared")
+        sys.stdout.flush()
+        time.sleep(1)
+    # Copy unprintable data to the clipboard
+    pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(array_of_passwords[-1]))]))
+
+
 if __name__ == '__main__':
 
     password_size = int(args.password_length)
@@ -254,45 +289,12 @@ if __name__ == '__main__':
         # Unneeded row is defined at the top of this loop
     #   row += 1
 
+    # TODO: remove sort or add variable length passwords option
     # Sort the passwords by their length, descending
     password_array.sort(key=len, reverse=True)
 
     if args.silent:
         pass
 
-    # TODO: Split the printing of the passwords out to a separate function
-    print_passwords_interactive(password_array)
-
-    # Ask the user which password to save
-    password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
-
-    try:
-        # Copy the password to the clipboard
-        pyperclip.copy(password_array[password_to_save])
-
-    except pyperclip.PyperclipException:
-
-        print(colored("\nError", 'red'))
-        print("If you're on Linux and seeing this error it probably means that ")
-        print("you don't have a clipboard program installed. ")
-        print("You can fix this by installing one of the copy/paste mechanisms:\n")
-        print("    'sudo apt-get install xsel' to install the xsel utility.")
-        print("    'sudo apt-get install xclip' to install the xclip utility.")
-        print("    'pip3 install gtk' to install the gtk Python module.")
-        print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
-        exit()
-
-    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
-    for i in range(60, -1, -1):
-        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i))+'\r')
-    # Switch color of prompt to red near less 10 seconds to completion
-        if i < 11:
-            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i))+'\r')
-        if i < 1:
-            sys.stdout.write("\033[K")
-            print("The clipboard has been cleared")
-        sys.stdout.flush()
-        time.sleep(1)
-
-    # Copy unprintable data to the clipboard
-    pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(password_array[-1]))]))
+    if args.interactive:
+        interactive_mode(password_array)
