@@ -94,11 +94,11 @@ Here is a color screenshot. The colors help you choose a password containing all
 ### `-j --japanese` Include Japanese Hiragana characters in the passwords
 Thanks to GitHub user [Tunl-Lite](https://github.com/Tunl-Lite) for this feature. Note that if you use a password with Japanese or other languages' characters you might encounter problems when trying to enter that password in some software, for example what happened to [this guy](https://answers.microsoft.com/en-us/windows/forum/all/inputting-and-ime-password-for-wifi-not-allowed/322eba17-c568-4e84-b36c-5e83da63608e). This feature works in silent or interactive mode.
 
-![passgen-japanese-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-japanese-screenshot.png, "This screenshot shows passgen creating passwords containing Japanese characters.")
+![passgen-japanese-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-japanese-screenshot.png "This screenshot shows passgen creating passwords containing Japanese characters.")
 
 ### `-w --random-words` Embed a random English word within each password.
 This feature will make the passwords easier to type and remember. But the password length must be at least 20 characters because of the threat of dictionary attacks. This feature works in silent or interactive mode.
 
-![passgen-random-words-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-random-words-screenshot.png, "This is a screenshot of passgen creating passwords with random words embedded inside each password.")
+![passgen-random-words-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-random-words-screenshot.png "This is a screenshot of passgen creating passwords with random words embedded inside each password.")
 
 Pull requests and feature requests are welcome.
