@@ -11,7 +11,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 
-parser.add_argument('-l', '--password-length', default=20,
+parser.add_argument('-l', '--password-length', '--length', default=20,
                     help='The length of the passwords to be generated.')
 
 parser.add_argument('-w', '--random-words', action='store_true',
@@ -229,6 +229,10 @@ def clipboard_countdown_and_erase():
 
     # Copy unprintable data to the clipboard
     pyperclip.copy(''.join([chr(random.randint(1, 31)) for _ in range(0, password_size)]))
+
+    # TODO: create an at job so that we can exit before erasing the clipboard
+    # See https://stackoverflow.com/a/10676359/1114256 for how to do this
+    # That will enable true silent mode
 
 
 def copy_to_clipboard(array_of_passwords, password_to_save):
