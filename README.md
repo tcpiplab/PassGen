@@ -2,8 +2,9 @@
 A small random password generator written in Python. If you're on a Mac it copies the password to the clipboard, then deletes it after 60 seconds.
 
 
-This is very helpful if you find that you have to create and paste a lot of new passwords for web apps and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it somewhere insecure, like into a Slack channel or something.
+This is very helpful if you find that you have to create and paste a lot of new passwords for websites, and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it somewhere insecure, like into a Slack channel or something.
 
+There is also a colorful interactive mode where you can choose from a list of passwords. See screenshots below.
 
 ## Requirements
 
@@ -23,7 +24,7 @@ $ cd PassGen
 $ pip3 install -r requirements.txt
 ```
 
-### Optional: Setup a Bash alias
+### Optional: Set up a Bash alias
 
 Add an alias to your `.bash_profile` file so that you can run this from the shell without having to call Python. Here is an example. You may or may not want to be using a `venv` in your path. That is not required. The point here is that the alias calls Python, wherever you have it installed, and the argument to Python is the path to `passgen.py`. The example below shows the alias on my Mac.
 
@@ -39,18 +40,33 @@ $ cd ~
 $ . .bash_profile
 ```
 
-## Usage
+## Usage and cli options
 
-You have to give a password length when you run it. For example, if you want 10 character passwords to choose from, run this:
-
-```
-$ passgen 10
-```
-
-In the example below, the user invoked `passgen.py` asking for 10 character passwords. The terminal then filled up with 14 passwords to choose from. This example was generated inside a small terminal window. If you want a lot of passwords to choose from you need a bigger terminal window. The user selected password number 3 by typing in `03` and hitting Enter. This copied the password `ep0+?8%%vi` to the Mac's clipboard and started a 60 second timer, printing the remaining seconds as it counted down. When the countdown ended the password was deleted from the clipboard.
+### Default behavior with no arguments
 
 ```
-$ passgen 10
+$ passgen
+The clipboard will be cleared in 60 seconds 
+```
+Silent mode is the default behavior, meaning that you run the command and a randomly generated password is silently copied to your clipboard. Then you have 60 seconds before the clipboard is erased. 
+
+
+### `-l --length n` Specifying Password Length
+You can specify a password length when you run it by using the `-l` or `--length` options followed by an integer. For example, if you want a 10 character password, run this:
+
+```
+$ passgen --length 10
+```
+
+If `passgen` is called without specifying the length the password(s) will default to 20 characters.
+
+### `-i --interactive` Interactive Mode
+Interactive mode is invoked using the `-i` or `--interactive` options. The output will display a list of numbered rows of passwords for you to choose from. Enter the number of a row and the corresponding password will be copied to the clipboard. Then, 60-seconds later the clipboard will be erased.
+
+In the example below, the user invoked `passgen.py` in interactive mode asking for 10 character passwords. The terminal then filled up with 14 passwords to choose from. This example was generated inside a small terminal window. If you want a lot of passwords to choose from you need a bigger terminal window. The user selected password number 3 by typing in `03` and hitting Enter. This copied the password `ep0+?8%%vi` to the Mac's clipboard and started a 60-second timer, printing the remaining seconds as it counted down. When the countdown ended the password was deleted from the clipboard. 
+
+```
+$ passgen --interactive --length 10
 10
 00   >HO'Q5GR'p
 01   ~q0ByACEW'
@@ -71,8 +87,18 @@ Enter the number of the password you want sent to the clipboard: 03
 The clipboard will be cleared in 60 seconds 
 ```
 
-Here is a color screenshot. The colors help you choose a password containing all character classes. For example, although password number 11, like the others, was generated at random, you can see that is contains too many lowercase letters (red), and it does not contain any uppercase letters (white).
+Here is a color screenshot. The colors help you choose a password containing all character classes. For example, although password number 7, like the others, was generated at random, you can see that is does not contain numbers (cyan).
 
-![Screen Shot 2020-10-27 at 8.47.27 PM.png](https://github.com/tcpiplab/PassGen/blob/master/Screen%20Shot%202020-10-27%20at%208.47.27%20PM.png)
+![passgen-interactive-10-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-interactive-10-screenshot.png "This is a screenshot of the passgen script being used in interactive mode. The user has asked for 10 character passwords.")
 
-Pull requests are welcome.
+### `-j --japanese` Include Japanese Hiragana characters in the passwords
+Thanks to GitHub user [Tunl-Lite](https://github.com/Tunl-Lite) for this feature. Note that if you use a password with Japanese or other languages' characters you might encounter problems when trying to enter that password in some software, for example what happened to [this guy](https://answers.microsoft.com/en-us/windows/forum/all/inputting-and-ime-password-for-wifi-not-allowed/322eba17-c568-4e84-b36c-5e83da63608e). This feature works in silent or interactive mode.
+
+![passgen-japanese-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-japanese-screenshot.png, "This screenshot shows passgen creating passwords containing Japanese characters.")
+
+### `-w --random-words` Embed a random English word within each password.
+This feature will make the passwords easier to type and remember. But the password length must be at least 20 characters because of the threat of dictionary attacks. This feature works in silent or interactive mode.
+
+![passgen-random-words-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-random-words-screenshot.png, "This is a screenshot of passgen creating passwords with random words embedded inside each password.")
+
+Pull requests and feature requests are welcome.

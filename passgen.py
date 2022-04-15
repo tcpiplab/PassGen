@@ -11,7 +11,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Generate random passwords, copy to clipboard, erase clipboard')
 
-parser.add_argument('-l', '--password-length', default=20,
+parser.add_argument('-l', '--password-length', '--length', default=20,
                     help='The length of the passwords to be generated.')
 
 parser.add_argument('-w', '--random-words', action='store_true',
@@ -19,6 +19,13 @@ parser.add_argument('-w', '--random-words', action='store_true',
 
 parser.add_argument('-j', '--japanese', action='store_true',
                     help='Include random Japanese characters in each password.')
+
+parser.add_argument('-s', '--silent', action='store_true',
+                    help='Silently return a password to the clipboard (default behavior).')
+
+parser.add_argument('-i', '--interactive', action='store_true',
+                    help='Generate a list of random passwords, allowing the user to choose one to copy to \
+                    the clipboard, erase the clipboard afterward.')
 
 args = parser.parse_args()
 
@@ -87,7 +94,6 @@ def get_random_word(wordlist, wordlist_length):
 def get_memorable_password(size_of_password):
 
     # TODO: add check for japanese flag and add japanese chars if needed.
-    random_word_of_proper_length = ''
 
     if size_of_password < 20:
         print("That won\'t work.")
@@ -109,7 +115,7 @@ def get_memorable_password(size_of_password):
         random_word_of_proper_length = add_entropy_right(random_word_of_proper_length)
 
         # About half of the time, skip adding the left char. So we have more on the right
-        if random.randint(0,1) == 0:
+        if random.randint(0, 1) == 0:
 
             pass
 
@@ -146,7 +152,138 @@ def add_entropy_left(rand_word):
     return rand_word
 
 
+def print_passwords_interactive(password_array):
+    """
+
+    :param password_array:
+    :return:
+    """
+
+    # Print each password with its index number
+    for index_number in range(len(password_array)):
+
+        # Print the index number of this password in the left column
+        print(colored("%02d   ", 'green') % (index_number,), end='')
+
+        password = password_array[index_number]
+
+        for character in password:
+
+            # print symbols in yellow
+            if ord(character) in range(33, 48):
+
+                print(colored(character, 'yellow'), end='')
+
+            # print uppercase strings in white
+            elif ord(character) in range(65, 91):
+
+                print(colored(character, 'white'), end='')
+
+            # print lowercase strings in red
+            elif ord(character) in range(97, 123):
+
+                print(colored(character, 'red'), end='')
+
+            # print numbers in cyan
+            elif ord(character) in range(48, 58):
+
+                print(colored(character, 'cyan'), end='')
+
+            # print hiragana in magenta
+            elif ord(character) in range(12353, 12437):
+
+                print(colored(character, 'magenta'), end='')
+
+            else:
+                # print the rest of the symbols in yellow (ASCII 123 - 126)
+                print(colored(character, 'yellow'), end='')
+
+        print('')
+
+
+def interactive_mode(array_of_passwords):
+
+    print_passwords_interactive(array_of_passwords)
+
+    # Ask the user which password to save
+    password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
+
+    copy_to_clipboard(array_of_passwords, password_to_save)
+
+    clipboard_countdown_and_erase()
+
+
+def clipboard_countdown_and_erase():
+
+    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
+    for i in range(60, -1, -1):
+        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i)) + '\r')
+        # Switch color of prompt to red near less 10 seconds to completion
+        if i < 11:
+            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i)) + '\r')
+        if i < 1:
+            sys.stdout.write("\033[K")
+            print("The clipboard has been cleared")
+        sys.stdout.flush()
+        time.sleep(1)
+
+    # Copy unprintable data to the clipboard
+    pyperclip.copy(''.join([chr(random.randint(1, 31)) for _ in range(0, password_size)]))
+
+    # TODO: create an at job so that we can exit before erasing the clipboard
+    # See https://stackoverflow.com/a/10676359/1114256 for how to do this
+    # That will enable true silent mode
+
+
+def copy_to_clipboard(array_of_passwords, password_to_save):
+
+    try:
+        # Copy the password to the clipboard
+        pyperclip.copy(array_of_passwords[password_to_save])
+
+    except pyperclip.PyperclipException:
+
+        print(colored("\nError", 'red'))
+        print("If you're on Linux and seeing this error it probably means that ")
+        print("you don't have a clipboard program installed. ")
+        print("You can fix this by installing one of the copy/paste mechanisms:\n")
+        print("    'sudo apt-get install xsel' to install the xsel utility.")
+        print("    'sudo apt-get install xclip' to install the xclip utility.")
+        print("    'pip3 install gtk' to install the gtk Python module.")
+        print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
+        exit()
+
+
+def silent_mode(array_of_passwds):
+    """
+    Select a random password from the provided array of passwords,
+    copy the selected password to the clipboard and exit.
+
+    :param array_of_passwds:
+    :return:
+    """
+
+    passwd_to_save = random.choice((range(0, array_of_passwds.__len__()))) 
+
+    copy_to_clipboard(array_of_passwds, passwd_to_save)
+
+    # TODO: create a silent option to skip the countdown and erase
+
+    clipboard_countdown_and_erase()
+
+    exit()
+
+
 if __name__ == '__main__':
+
+    # Set cli argument defaults.
+    # If no options were specified on the command line, set silent mode by default
+    if not len(sys.argv) > 1:
+        args.silent = True
+
+    # If no -i to ask for interactive mode, then set to silent mode by default
+    if not args.interactive:
+        args.silent = True
 
     password_size = int(args.password_length)
 
@@ -198,82 +335,12 @@ if __name__ == '__main__':
         # Unneeded row is defined at the top of this loop
     #   row += 1
 
+    # TODO: remove sort or add variable length passwords option
     # Sort the passwords by their length, descending
     password_array.sort(key=len, reverse=True)
 
-    # TODO: Split the printing of the passwords out to a separate function
-    # Print each password with its index number
-    for index_number in range(len(password_array)):
+    if args.silent:
+        silent_mode(password_array)
 
-        # Print the index number of this password in the left column
-        print(colored("%02d   ", 'green') % (index_number,), end='')
-
-        password = password_array[index_number]
-
-        for character in password:
-
-            # print symbols in yellow
-            if ord(character) in range(33, 48):
-
-                print(colored(character, 'yellow'), end='')
-
-            # print uppercase strings in white
-            elif ord(character) in range(65, 91):
-
-                print(colored(character, 'white'), end='')
-
-            # print lowercase strings in red
-            elif ord(character) in range(97, 123):
-
-                print(colored(character, 'red'), end='')
-
-            # print numbers in cyan
-            elif ord(character) in range(48, 58):
-
-                print(colored(character, 'cyan'), end='')
-
-            # print hiragana in magenta
-            elif ord(character) in range(12353, 12437):
-
-                print(colored(character, 'magenta'), end='')
-
-            else:
-                # print the rest of the symbols in yellow (ASCII 123 - 126)
-                print(colored(character, 'yellow'), end='')
-
-        print('')
-
-    # TODO: Get a PR from Tunl-Lite for his fix for when the wrong char is entered
-    # Ask the user which password to save
-    password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
-
-    try:
-        # Copy the password to the clipboard
-        pyperclip.copy(password_array[password_to_save])
-
-    except pyperclip.PyperclipException:
-
-        print(colored("\nError", 'red'))
-        print("If you're on Linux and seeing this error it probably means that ")
-        print("you don't have a clipboard program installed. ")
-        print("You can fix this by installing one of the copy/paste mechanisms:\n")
-        print("    'sudo apt-get install xsel' to install the xsel utility.")
-        print("    'sudo apt-get install xclip' to install the xclip utility.")
-        print("    'pip3 install gtk' to install the gtk Python module.")
-        print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
-        exit()
-
-    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
-    for i in range(60, -1, -1):
-        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i))+'\r')
-    # Switch color of prompt to red near less 10 seconds to completion
-        if i < 11:
-            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i))+'\r')
-        if i < 1:
-            sys.stdout.write("\033[K")
-            print("The clipboard has been cleared")
-        sys.stdout.flush()
-        time.sleep(1)
-
-    # Copy unprintable data to the clipboard
-    pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(password_array[-1]))]))
+    if args.interactive:
+        interactive_mode(password_array)
