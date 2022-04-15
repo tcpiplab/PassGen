@@ -40,7 +40,7 @@ $ cd ~
 $ . .bash_profile
 ```
 
-## Usage
+## Usage and cli options
 
 ### Default behavior with no arguments
 
@@ -51,7 +51,7 @@ The clipboard will be cleared in 60 seconds
 Silent mode is the default behavior, meaning that you run the command and a randomly generated password is silently copied to your clipboard. Then you have 60 seconds before the clipboard is erased. 
 
 
-### Specifying Password Length
+### `-l --length n` Specifying Password Length
 You can specify a password length when you run it by using the `-l` or `--length` options followed by an integer. For example, if you want a 10 character password, run this:
 
 ```
@@ -60,7 +60,7 @@ $ passgen --length 10
 
 If `passgen` is called without specifying the length the password(s) will default to 20 characters.
 
-### Interactive Mode
+### `-i --interactive` Interactive Mode
 Interactive mode is invoked using the `-i` or `--interactive` options. The output will display a list of numbered rows of passwords for you to choose from. Enter the number of a row and the corresponding password will be copied to the clipboard. Then, 60-seconds later the clipboard will be erased.
 
 In the example below, the user invoked `passgen.py` in interactive mode asking for 10 character passwords. The terminal then filled up with 14 passwords to choose from. This example was generated inside a small terminal window. If you want a lot of passwords to choose from you need a bigger terminal window. The user selected password number 3 by typing in `03` and hitting Enter. This copied the password `ep0+?8%%vi` to the Mac's clipboard and started a 60-second timer, printing the remaining seconds as it counted down. When the countdown ended the password was deleted from the clipboard. 
@@ -90,5 +90,15 @@ The clipboard will be cleared in 60 seconds
 Here is a color screenshot. The colors help you choose a password containing all character classes. For example, although password number 7, like the others, was generated at random, you can see that is does not contain numbers (cyan).
 
 ![passgen-interactive-10-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-interactive-10-screenshot.png "This is a screenshot of the passgen script being used in interactive mode. The user has asked for 10 character passwords.")
+
+### `-j --japanese` Include Japanese Hiragana characters in the passwords
+Thanks to GitHub user [Tunl-Lite](https://github.com/Tunl-Lite) for this feature. Note that if you use a password with Japanese or other languages' characters you might encounter problems when trying to enter that password in some software, for example what happened to [this guy](https://answers.microsoft.com/en-us/windows/forum/all/inputting-and-ime-password-for-wifi-not-allowed/322eba17-c568-4e84-b36c-5e83da63608e). This feature works in silent or interactive mode.
+
+![passgen-japanese-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-japanese-screenshot.png, "This screenshot shows passgen creating passwords containing Japanese characters.")
+
+### `-w --random-words` Embed a random English word within each password.
+This feature will make the passwords easier to type and remember. But the password length must be at least 20 characters because of the threat of dictionary attacks. This feature works in silent or interactive mode.
+
+![passgen-random-words-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-random-words-screenshot.png, "This is a screenshot of passgen creating passwords with random words embedded inside each password.")
 
 Pull requests and feature requests are welcome.
