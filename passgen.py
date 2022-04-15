@@ -94,7 +94,6 @@ def get_random_word(wordlist, wordlist_length):
 def get_memorable_password(size_of_password):
 
     # TODO: add check for japanese flag and add japanese chars if needed.
-    random_word_of_proper_length = ''
 
     if size_of_password < 20:
         print("That won\'t work.")
@@ -203,10 +202,37 @@ def print_passwords_interactive(password_array):
 
 
 def interactive_mode(array_of_passwords):
-    # TODO: Split the printing of the passwords out to a separate function
+
     print_passwords_interactive(array_of_passwords)
+
     # Ask the user which password to save
     password_to_save = input_number('Enter the number of the password you want sent to the clipboard: ')
+
+    copy_to_clipboard(array_of_passwords, password_to_save)
+
+    clipboard_countdown_and_erase()
+
+
+def clipboard_countdown_and_erase():
+
+    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
+    for i in range(60, -1, -1):
+        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i)) + '\r')
+        # Switch color of prompt to red near less 10 seconds to completion
+        if i < 11:
+            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i)) + '\r')
+        if i < 1:
+            sys.stdout.write("\033[K")
+            print("The clipboard has been cleared")
+        sys.stdout.flush()
+        time.sleep(1)
+
+    # Copy unprintable data to the clipboard
+    pyperclip.copy(''.join([chr(random.randint(1, 31)) for _ in range(0, password_size)]))
+
+
+def copy_to_clipboard(array_of_passwords, password_to_save):
+
     try:
         # Copy the password to the clipboard
         pyperclip.copy(array_of_passwords[password_to_save])
@@ -222,42 +248,38 @@ def interactive_mode(array_of_passwords):
         print("    'pip3 install gtk' to install the gtk Python module.")
         print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
         exit()
-    # Show a countdown timer leading up to erasing the clipboard after 60 seconds
-    for i in range(60, -1, -1):
-        sys.stdout.write(" The clipboard will be cleared in {} seconds ".format(str(i)) + '\r')
-        # Switch color of prompt to red near less 10 seconds to completion
-        if i < 11:
-            sys.stdout.write(colored(" The clipboard will be cleared in {} seconds ", 'red').format(str(i)) + '\r')
-        if i < 1:
-            sys.stdout.write("\033[K")
-            print("The clipboard has been cleared")
-        sys.stdout.flush()
-        time.sleep(1)
-    # Copy unprintable data to the clipboard
-    pyperclip.copy(''.join([chr(random.randint(1, 31)) for i in range(0, len(array_of_passwords[-1]))]))
 
 
-def silent_mode(arrary_of_passwds):
+def silent_mode(array_of_passwds):
     """
+    Select a random password from the provided array of passwords,
+    copy the selected password to the clipboard and exit.
 
-    :param arrary_of_passw:
+    :param array_of_passwds:
     :return:
     """
-    passwd_to_print = random.choice(arrary_of_passwds)
 
-    # TODO: pass passwd to the clipboard instead of printing
-    print(passwd_to_print)
+    passwd_to_save = random.choice((range(0, array_of_passwds.__len__()))) 
+
+    copy_to_clipboard(array_of_passwds, passwd_to_save)
+
+    # TODO: create a silent option to skip the countdown and erase
+
+    clipboard_countdown_and_erase()
+
     exit()
 
 
 if __name__ == '__main__':
 
-    # Set cli argument defaults. If no args, set -s. If no -s then set -i.
+    # Set cli argument defaults.
+    # If no options were specified on the command line, set silent mode by default
     if not len(sys.argv) > 1:
         args.silent = True
 
-    if not args.silent:
-        args.interactive = True
+    # If no -i to ask for interactive mode, then set to silent mode by default
+    if not args.interactive:
+        args.silent = True
 
     password_size = int(args.password_length)
 
