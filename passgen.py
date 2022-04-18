@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+import platform
+
 import pyperclip
 from termcolor import colored
 import random
@@ -28,6 +30,10 @@ parser.add_argument('-i', '--interactive', action='store_true',
                     the clipboard, erase the clipboard afterward.')
 
 args = parser.parse_args()
+
+
+# Detect the OS so we know where to find word dictionary files
+this_os = platform.system()
 
 
 def random_ascii_or_hiragana():
@@ -68,14 +74,32 @@ def create_english_wordlist() -> object:
 
     # TODO: Detect OS, choose this file or the Linux dictionary. Error out if Windows?
 
-    # Using the word lists from MacOS
-    wordlist = [line.strip() for line in open('/usr/share/dict/words')]
+    if this_os == 'Darwin':
+        # Using the word lists from MacOS
+        wordlist = [line.strip() for line in open('/usr/share/dict/words')]
+        wordlist += [line.strip() for line in open('/usr/share/dict/propernames')]
+        wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/dict/web2a')]
+        wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/zoneinfo.default/iso3166.tab')]
 
-    wordlist += [line.strip() for line in open('/usr/share/dict/propernames')]
+    elif this_os == 'Linux':
+        wordlist = [line.strip() for line in open('/usr/share/dict/words')]
+        wordlist += [line.strip() for line in open('/usr/dict/words')]
 
-    wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/dict/web2a')]
+    elif this_os == 'Windows':
+        print('The \'-w\', \'--random-words\' option is not yet supported on {}.'.format(this_os))
+        pass
 
-    wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/zoneinfo.default/iso3166.tab')]
+    elif this_os == 'Java':
+        print('The \'-w\', \'--random-words\' option is not yet supported on {}.'.format(this_os))
+        pass
+
+    elif this_os == '':
+        print('{} can not determine the name of the OS you\'re running. This means that '.format(os.path.basename(__file__)))
+        print('the \'-w\', \'--random-words\' option is not supported for your OS.')
+
+    else:
+        # For FreeBSD or anything else...
+        print('The \'-w\', \'--random-words\' option is not yet supported on {}.'.format(this_os))
 
     wordlist_length = wordlist.__len__()
 
