@@ -109,11 +109,14 @@ def create_english_wordlist() -> object:
         # By now we hopefully have a populated wordlist
         # But if we're on Kali Linux there probably is only known-weak-password wordlists, which we obv don't want
         elif platform.node() == 'kali':
-            print('The \'-w\', \'--random-words\' option is not yet supported on Kali Linux.')
-            print('This is because Kali does not have a dictionary of words to use.')
-            print('Do NOT use the dictionary in /usr/share/dict. That is a dictionary of weak passwords.')
-            # print('You can install one in ')
-            pass
+            # Check to see if they've already installed a dictionary themselves
+            try:
+                wordlist += [line.strip() for line in open(dictionary_path_one)]
+            except FileNotFoundError:
+                print('The \'-w\', \'--random-words\' option is not yet supported on Kali Linux.')
+                print('This is because Kali does not have a dictionary of words to use.')
+                print('Do NOT use the dictionary in /usr/share/dict. That is a dictionary of weak passwords.')
+                # print('You can install one in ')
         else:
             print('Whatever kind of Linux you\'re running does not seem to have a dictionary file.')
             print('So the \'-w\', \'--random-words\' option will not work.')
