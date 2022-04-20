@@ -94,6 +94,8 @@ def create_english_wordlist() -> object:
         dictionary_path_one = Path('/usr/share/dict/words')
         dictionary_path_two = Path('/usr/dict/words')
 
+        print(dictionary_path_one)
+
         # Check the first possible location for a dictionary file to see if it exists
         if dictionary_path_one.is_file():
             try:
