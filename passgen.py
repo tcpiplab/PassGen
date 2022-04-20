@@ -96,18 +96,17 @@ def create_english_wordlist() -> object:
 
         # Check the first possible location for a dictionary file to see if it exists
         if dictionary_path_one.is_file():
-            print('{}'.format(dictionary_path_one))
-            print('is a file.')
             try:
                 wordlist += [line.strip() for line in open(dictionary_path_one)]
-            except FileNotFoundError:
-                print('it broke anyway')
+
+            except FileNotFoundError as e:
+                print(e)
         # Check the second possible location for a dictionary file to see if it exists
-        if dictionary_path_two.is_file():
+        elif dictionary_path_two.is_file():
             try:
                 wordlist += [line.strip() for line in open(dictionary_path_two)]
-            except FileNotFoundError:
-                pass
+            except FileNotFoundError as e:
+                print(e)
         # By now we hopefully have a populated wordlist
         # But if we're on Kali Linux there probably is only known-weak-password wordlists, which we obv don't want
         elif platform.node() == 'kali':
