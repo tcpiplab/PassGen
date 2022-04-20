@@ -94,14 +94,14 @@ def create_english_wordlist() -> object:
         dictionary_path_one = Path('/usr/share/dict/words')
         dictionary_path_two = Path('/usr/dict/words')
 
-        print(dictionary_path_one)
-
         # Check the first possible location for a dictionary file to see if it exists
         if dictionary_path_one.is_file():
+            print('{}'.format(dictionary_path_one))
+            print('is a file.')
             try:
                 wordlist += [line.strip() for line in open(dictionary_path_one)]
             except FileNotFoundError:
-                pass
+                print('it broke anyway')
         # Check the second possible location for a dictionary file to see if it exists
         if dictionary_path_two.is_file():
             try:
