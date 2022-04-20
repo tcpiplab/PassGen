@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 import platform
-
+from pathlib import Path
 import pyperclip
 from termcolor import colored
 import random
@@ -71,19 +71,57 @@ def input_number(message):
 
 
 def create_english_wordlist() -> object:
+    """
+    Determine the OS, find any existing dictionary file.
+    Put those words into a list, return the list and length of the list.
+    :return: list: wordlist, int: wordlist_length
+    """
 
-    # TODO: Detect OS, choose this file or the Linux dictionary. Error out if Windows?
+    # Create a wordlist list object we can populate from the words file
+    wordlist = []
 
+    # For Mac OS there are several good files we can cat together
     if this_os == 'Darwin':
         # Using the word lists from MacOS
-        wordlist = [line.strip() for line in open('/usr/share/dict/words')]
+        wordlist += [line.strip() for line in open('/usr/share/dict/words')]
         wordlist += [line.strip() for line in open('/usr/share/dict/propernames')]
         wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/dict/web2a')]
         wordlist += [line.strip().replace(" ", "") for line in open('/usr/share/zoneinfo.default/iso3166.tab')]
 
+    # For Linux we can try to find the traditional Unix words file, but it is not always there
     elif this_os == 'Linux':
-        wordlist = [line.strip() for line in open('/usr/share/dict/words')]
-        wordlist += [line.strip() for line in open('/usr/dict/words')]
+        # Check if a dictionary file exists
+        dictionary_path_one = Path('/usr/share/dict/words')
+        dictionary_path_two = Path('/usr/dict/words')
+
+        # Check the first possible location for a dictionary file to see if it exists
+        if dictionary_path_one.is_file():
+            try:
+                wordlist += [line.strip() for line in open(dictionary_path_one)]
+            except FileNotFoundError:
+                pass
+        # Check the second possible location for a dictionary file to see if it exists
+        if dictionary_path_two.is_file():
+            try:
+                wordlist += [line.strip() for line in open(dictionary_path_two)]
+            except FileNotFoundError:
+                pass
+        # By now we hopefully have a populated wordlist
+        # But if we're on Kali Linux there probably is only known-weak-password wordlists, which we obv don't want
+        elif platform.node() == 'kali':
+            print('The \'-w\', \'--random-words\' option is not yet supported on Kali Linux.')
+            print('This is because Kali does not have a dictionary of words to use.')
+            print('Do NOT use the dictionary in /usr/share/dict. That is a dictionary of weak passwords.')
+            # print('You can install one in ')
+            pass
+        else:
+            print('Whatever kind of Linux you\'re running does not seem to have a dictionary file.')
+            print('So the \'-w\', \'--random-words\' option will not work.')
+            print('You can try manually placing one in \'/usr/share/dict/words\'.')
+            print('If you\'re on a Debian/Ubuntu variant maybe try one of these:')
+            print('    \'sudo apt-get install wamerican\'')
+            print('    \'sudo apt-get install wbritish\'')
+            exit()
 
     elif this_os == 'Windows':
         print('The \'-w\', \'--random-words\' option is not yet supported on {}.'.format(this_os))
@@ -94,7 +132,8 @@ def create_english_wordlist() -> object:
         pass
 
     elif this_os == '':
-        print('{} can not determine the name of the OS you\'re running. This means that '.format(os.path.basename(__file__)))
+        print('{} can not determine the name of the OS you\'re running. '
+              'This means that '.format(os.path.basename(__file__)))
         print('the \'-w\', \'--random-words\' option is not supported for your OS.')
 
     else:
@@ -126,7 +165,7 @@ def get_memorable_password(size_of_password):
         exit()
 
     # Grab a random English word and its length
-    random_word, random_word_length = get_random_word(wordlist, wordlist_length)
+    random_word, random_word_length = get_random_word(the_wordlist, the_wordlist_length)
 
     # Chop the random word down to about 60% as long as the password
     truncated_random_word_length = round(int(size_of_password) * 0.6)
@@ -314,7 +353,7 @@ if __name__ == '__main__':
     password_array = []
 
     # Create a list of English words
-    wordlist, wordlist_length = create_english_wordlist()
+    the_wordlist, the_wordlist_length = create_english_wordlist()
 
     # Get the terminal dimensions
     rows, columns = os.popen('stty size', 'r').read().split()
