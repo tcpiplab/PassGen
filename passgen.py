@@ -304,21 +304,29 @@ def clipboard_countdown_and_erase():
 
 def copy_to_clipboard(array_of_passwords, password_to_save):
 
-    try:
-        # Copy the password to the clipboard
-        pyperclip.copy(array_of_passwords[password_to_save])
+    if "SSH_CONNECTION" in os.environ:
+        print('WARNING: the clipboard functionality (copy/erase) does not ')
+        print('work if {} is run inside an SSH session.')
+        print('You have to be on a system with a GUI for the clipboard to work.')
+        print('You can still generate passwords but you will keep seeing errors in your terminal.')
 
-    except pyperclip.PyperclipException:
+    else:
 
-        print(colored("\nError", 'red'))
-        print("If you're on Linux and seeing this error it probably means that ")
-        print("you don't have a clipboard program installed. ")
-        print("You can fix this by installing one of the copy/paste mechanisms:\n")
-        print("    'sudo apt-get install xsel' to install the xsel utility.")
-        print("    'sudo apt-get install xclip' to install the xclip utility.")
-        print("    'pip3 install gtk' to install the gtk Python module.")
-        print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
-        exit()
+        try:
+            # Copy the password to the clipboard
+            pyperclip.copy(array_of_passwords[password_to_save])
+
+        except pyperclip.PyperclipException:
+
+            print(colored("\nError", 'red'))
+            print("If you're on Linux and seeing this error it probably means that ")
+            print("you don't have a clipboard program installed. ")
+            print("You can fix this by installing one of the copy/paste mechanisms:\n")
+            print("    'sudo apt-get install xsel' to install the xsel utility.")
+            print("    'sudo apt-get install xclip' to install the xclip utility.")
+            print("    'pip3 install gtk' to install the gtk Python module.")
+            print("    'pip3 install PyQt4' to install the PyQt4 Python module.")
+            exit()
 
 
 def silent_mode(array_of_passwds):
