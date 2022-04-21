@@ -306,9 +306,10 @@ def copy_to_clipboard(array_of_passwords, password_to_save):
 
     if "SSH_CONNECTION" in os.environ:
         print('WARNING: the clipboard functionality (copy/erase) does not ')
-        print('work if {} is run inside an SSH session.')
+        print('work if {} is run inside an SSH session.'.format(os.path.basename(__file__)))
         print('You have to be on a system with a GUI for the clipboard to work.')
-        print('You can still generate passwords but you will keep seeing errors in your terminal.')
+        print('You can still generate passwords with \'{} --interactive\' but'.format(os.path.basename(__file__)))
+        print('you will also continue seeing errors in your terminal.')
 
     else:
 
