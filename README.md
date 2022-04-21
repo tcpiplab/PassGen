@@ -1,6 +1,7 @@
 # PassGen
-A small random password generator written in Python. If you're on a Mac it copies the password to the clipboard, then deletes it after 60 seconds.
+A small random password generator written in Python. If you're on a Mac or Linux it copies the password to the clipboard, then deletes it after 60 seconds.
 
+Not yet tested on Windows.
 
 This is very helpful if you find that you have to create and paste a lot of new passwords for websites, and you want to have time to paste the new password into a web app and into your password manager app, but then have the password deleted from the clipboard so that you don't later paste it somewhere insecure, like into a Slack channel or something.
 
@@ -100,5 +101,11 @@ Thanks to GitHub user [Tunl-Lite](https://github.com/Tunl-Lite) for this feature
 This feature will make the passwords easier to type and remember. But the password length must be at least 20 characters because of the threat of dictionary attacks. This feature works in silent or interactive mode.
 
 ![passgen-random-words-screenshot.png](https://github.com/tcpiplab/PassGen/blob/master/passgen-random-words-screenshot.png "This is a screenshot of passgen creating passwords with random words embedded inside each password.")
+
+## Clipboard copy/erase disabled in remote SSH sessions
+
+If you're SSHing into a Linux server and running passgen from there, the clipboard cannot copy and erase. This is because without a GUI (X11) there is no reasonable way to get text from your SSH session into your local terminal emulator GUI. You will still be able to generate passwords, but you'll see errors too.
+
+-------------------------------------------------
 
 Pull requests and feature requests are welcome.
